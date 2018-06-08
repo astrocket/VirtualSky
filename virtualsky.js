@@ -427,7 +427,7 @@ function VirtualSky(input){
 				return true;
 			},
 			atmos: false,
-			fullsky: true
+			fullsky: false
 		},
 		'equirectangular':{
 			title: 'Equirectangular projection',
@@ -859,7 +859,6 @@ function VirtualSky(input){
 
 VirtualSky.prototype.init = function(d){
 
-	console.log('init input : ' + JSON.stringify(d));
 	if(!d) return this;
 	var q = location.search;
 	if(q && q != '#'){
@@ -918,12 +917,12 @@ VirtualSky.prototype.init = function(d){
 		plugins: o,
 		lang: s,
     onClickObject: f,
+		objectTemplate: f,
 	};
 
 	for(key in pairs) {
 		if (is(d[key], pairs[key])) {
       this[key] = d[key];
-      console.log(key + ' : ' + d[key]);
 		}
 	}
 
@@ -2224,7 +2223,7 @@ VirtualSky.prototype.drawPlanets = function(){
 					continue;	// We don't have data for this planet so skip to the next
 				}
 			}
-		}else{
+		} else {
 			ra = this.planets[p][2];
 			dec = this.planets[p][3];
 		}
@@ -2815,6 +2814,7 @@ VirtualSky.prototype.panStep = function(){
 		this.setRADec(ra,dc).draw();	
 		var _obj = this;
 		// request new frame
+
 		requestAnimFrame(function() { _obj.panStep(); });
 	}else{
 		// We've ended
@@ -3055,16 +3055,12 @@ function convertTZ(s){
 }
 
 $.virtualsky = function(placeholder,input) {
-	console.log('$.virtualsky : ' + JSON.stringify(placeholder));
-	console.log('typeof placeholder : ' + typeof placeholder);
 	if(typeof input==="object") input.container = placeholder;
 	else {
 		if(typeof placeholder==="string") input = { container: placeholder };
 		else input = placeholder;
 	}
-	console.log('input a : ' + JSON.stringify(input));
 	input.plugins = $.virtualsky.plugins;
-  console.log('input b : ' + JSON.stringify(input));
 	return new VirtualSky(input);
 };
 
